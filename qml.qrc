@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>PointDialog.qml</file>
+        <file>PointDelegate.qml</file>
+        <file>SaveLoadData.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>MapDialog.qml</file>
+        <file>marker.png</file>
+    </qresource>
+</RCC>
