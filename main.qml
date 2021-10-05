@@ -96,15 +96,6 @@ ApplicationWindow {
                 for(var i = 0; i < count; i++)
                 updateInfoAboutPoint(i)
             }
-
-
-            onDataChanged: {
-                var selectedPC = 0
-                for (var i = 0; i < count; i++)
-                    if (get(i).selected)
-                        selectedPC ++
-                listView.selectedPointsCount = selectedPC
-            }
         }
         delegate: PointDelegate {
             onPressAndHold: listView.selectionMode = true

@@ -38,22 +38,9 @@ ItemDelegate {
                     text: model.pointName
                 }
             }
+
             Item{ Layout.fillWidth: true  }
 
-            Switch{
-                id: swith
-                visible: !selectionMode
-                checked: model.activated
-                Layout.alignment: Qt.AlignTop
-                onCheckedChanged:  model.activated = checked
-            }
-
-            CheckBox{
-                id: control
-                visible: selectionMode
-                onCheckedChanged:  model.selected = checked
-
-            }
             Image {
                 id: icon
                 source: model.icon
@@ -63,6 +50,27 @@ ItemDelegate {
                 id: description
                 text: model.weatherDescription
             }
+
+
+            Switch{
+                id: swith
+                visible: !selectionMode
+                checked: model.activated
+                Layout.alignment: Qt.AlignTop
+                onCheckedChanged: model.activated = checked
+
+            }
+
+            CheckBox{
+                id: control
+                visible: selectionMode
+                onCheckedChanged: {
+                    model.selected = checked
+                    checked ? listView.selectedPointsCount ++ : listView.selectedPointsCount --
+                }
+
+            }
+
         }
 
         Flow{
