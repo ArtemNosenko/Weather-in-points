@@ -32,6 +32,7 @@ Item {
                                                  "minute":    objPoint["minute"],
                                                  "pointName": objPoint["pointName"],
                                                  "activated": objPoint["activated"],
+                                                 "temp" : objPoint["temp"],
                                                  "selected" : false,
                                                  "icon" :     objPoint["icon"],
                                                  "weatherDescription": objPoint["weatherDescription"],
@@ -40,6 +41,7 @@ Item {
                                              )
 
 
+                            lModel.updateInfoAboutPoint(lModel.count - 1)
                         }
                     }
                     )

@@ -90,12 +90,16 @@ ApplicationWindow {
 
                 get(number).icon = "http://openweathermap.org/img/wn/" +  JsonObject.hourly[closetstDateDataNumber].weather[0].icon + "@2x.png"
                 get(number).weatherDescription = JsonObject.hourly[closetstDateDataNumber].weather[0].description
+                get(number).temp = (parseInt (JsonObject.hourly[closetstDateDataNumber].temp) - 273).toString() //K to C
             }
 
             function updateInfoAboutPoints() {
                 for(var i = 0; i < count; i++)
                 updateInfoAboutPoint(i)
             }
+
+
+
         }
         delegate: PointDelegate {
             onPressAndHold: listView.selectionMode = true

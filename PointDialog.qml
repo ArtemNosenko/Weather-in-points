@@ -29,6 +29,7 @@ Dialog {
                           "pointName": tf.text,
                           "activated": false,
                           "selected" : false,
+                          "temp" : '',
                           "icon" :'',
                           "weatherDescription": '',
                           "daysToRepeat" : [

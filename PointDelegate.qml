@@ -41,6 +41,13 @@ ItemDelegate {
 
             Item{ Layout.fillWidth: true  }
 
+
+            Text {
+                id: temperature
+                text:  model.temp + ' C°'
+               // onTextChanged:
+            }
+
             Image {
                 id: icon
                 source: model.icon
