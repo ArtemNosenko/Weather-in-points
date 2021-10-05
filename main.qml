@@ -104,7 +104,6 @@ ApplicationWindow {
         delegate: PointDelegate {
             onPressAndHold: listView.selectionMode = true
             selectionMode: listView.selectionMode
-
         }
     }
 
@@ -114,7 +113,7 @@ ApplicationWindow {
         visible: !listView.selectionMode
         anchors.bottom: listView.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        onPressed:  mapDialog.open()
+        onPressed:  pointDialog.open()
 
     }
     Button {
@@ -158,19 +157,10 @@ ApplicationWindow {
         }
     }
 
-    MapDialog{
-        id: mapDialog
-        width: window.width
-        height: window.height
-        visible: false
-        onAccepted: pointDialog.open()
-    }
-
     PointDialog{
         id: pointDialog
-        coord: mapDialog.pointCoordinate
-        x: Math.round((parent.width - width) / 2)
-        y: Math.round((parent.height - height) / 2)
+        width: window.width
+        height: window.height
         lModel: listView.model
     }
 

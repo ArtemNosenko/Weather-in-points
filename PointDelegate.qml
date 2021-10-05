@@ -45,7 +45,6 @@ ItemDelegate {
             Text {
                 id: temperature
                 text:  model.temp + ' C°'
-               // onTextChanged:
             }
 
             Image {
