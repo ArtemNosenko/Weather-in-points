@@ -42,6 +42,7 @@ Dialog {
                           ]
                       }
                       )
+        lModel.updateInfoAboutPoint(lModel.count - 1)
 
 
     }

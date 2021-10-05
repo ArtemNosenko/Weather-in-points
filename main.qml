@@ -20,7 +20,6 @@ ApplicationWindow {
     }
     Component.onCompleted: {
         saveLoadData.loadData()
-        listModel.updateInfoAboutPoints()
         initialyLoadedData = true
     }
     onClosing: saveLoadData.saveData()
@@ -61,39 +60,41 @@ ApplicationWindow {
         model: ListModel {
             id : listModel
 
+            function updateInfoAboutPoint(number){
+                backEnd.request = "/data/2.5/onecall?lat=" + get(number).lat + '&lon=' +
+                        get(number).lon +  "&exclude=daily&appid=491a54922af0f56f87b30ee988483263"
+
+                var JsonString = backEnd.run()
+                var JsonObject = JSON.parse(JsonString)
+
+                var closetstDateDataNumber = 0
+                var dateForRequest = new Date()
+                dateForRequest.setHours(get(number).hour)
+                dateForRequest.setMinutes(get(number).minute)
+
+                if (dateForRequest < new Date())
+                    dateForRequest.setDate(dateForRequest.getDate() + 1)
+
+                var minDateDiff = Math.abs(dateForRequest - new Date(JsonObject.hourly[0].dt*1000))
+
+                for (var j = 1; j < JsonObject.hourly.length; j++)
+                {
+                     var curDataDiff = Math.abs(dateForRequest - new Date(JsonObject.hourly[j].dt*1000))
+                      if (minDateDiff > curDataDiff)
+                      {
+                          closetstDateDataNumber = j
+                          minDateDiff = curDataDiff
+                      }
+
+                }
+
+                get(number).icon = "http://openweathermap.org/img/wn/" +  JsonObject.hourly[closetstDateDataNumber].weather[0].icon + "@2x.png"
+                get(number).weatherDescription = JsonObject.hourly[closetstDateDataNumber].weather[0].description
+            }
+
             function updateInfoAboutPoints() {
                 for(var i = 0; i < count; i++)
-                {
-                    backEnd.request = "/data/2.5/onecall?lat=" + get(i).lat + '&lon=' +
-                            get(i).lon +  "&exclude=daily&appid=491a54922af0f56f87b30ee988483263"
-
-                    var JsonString = backEnd.run()
-                    var JsonObject = JSON.parse(JsonString)
-
-                    var closetstDateDataNumber = 0
-                    var dateForRequest = new Date()
-                    dateForRequest.setHours(get(i).hour)
-                    dateForRequest.setMinutes(get(i).minute)
-
-                    if (dateForRequest < new Date())
-                        dateForRequest.setDate(dateForRequest.getDate() + 1)
-
-                    var minDateDiff = Math.abs(dateForRequest - new Date(JsonObject.hourly[0].dt*1000))
-
-                    for (var j = 1; j < JsonObject.hourly.length; j++)
-                    {
-                         var curDataDiff = Math.abs(dateForRequest - new Date(JsonObject.hourly[j].dt*1000))
-                          if (minDateDiff > curDataDiff)
-                          {
-                              closetstDateDataNumber = j
-                              minDateDiff = curDataDiff
-                          }
-
-                    }
-
-                    get(i).icon = "http://openweathermap.org/img/wn/" +  JsonObject.hourly[closetstDateDataNumber].weather[0].icon + "@2x.png"
-                    get(i).weatherDescription = JsonObject.hourly[closetstDateDataNumber].weather[0].description
-                }
+                updateInfoAboutPoint(i)
             }
 
 
