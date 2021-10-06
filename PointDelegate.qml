@@ -13,10 +13,12 @@ ItemDelegate {
     onClicked: {
         if (selectionMode)
             control.checked = !control.checked
-        //ListView.view.currentIndex = index
+        ListView.view.currentIndex = index
     }
 
-    onPressAndHold:  control.checked = true
+    onPressAndHold: { control.checked = true
+
+    }
 
     onSelectionModeChanged: {
         if (selectionMode === false)
@@ -63,7 +65,7 @@ ItemDelegate {
                 visible: !selectionMode
                 checked: model.activated
                 Layout.alignment: Qt.AlignTop
-                onCheckedChanged: model.activated = checked
+                onCheckedChanged: model.activated = swith.checked
 
             }
 
@@ -71,8 +73,8 @@ ItemDelegate {
                 id: control
                 visible: selectionMode
                 onCheckedChanged: {
-                    model.selected = checked
-                    checked ? listView.selectedPointsCount ++ : listView.selectedPointsCount --
+                    model.selected = control.checked
+                    model.selected  ? listView.selectedPointsCount ++ : listView.selectedPointsCount --
                 }
 
             }

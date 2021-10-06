@@ -41,11 +41,6 @@ ApplicationWindow {
         property bool selectionMode: false
         property int selectedPointsCount: 0
 
-        onSelectionModeChanged: {
-            if (selectionMode === false)
-                selectedPointsCount = 0
-        }
-
         anchors.top: columnLayout.bottom
         anchors.right: parent.right
         anchors.bottom: parent.bottom
