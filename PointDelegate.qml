@@ -9,22 +9,22 @@ ItemDelegate {
     width: parent.width
     checkable: true
 
-    property bool selectionMode: false
+    property bool selectionMode
+    readonly property int currentIndex: ListView.view.currentIndex
+   // onCurrentIndexChanged: console.log(currentIndex)
     onClicked: {
         if (selectionMode)
             control.checked = !control.checked
         ListView.view.currentIndex = index
     }
-
-    onPressAndHold: { control.checked = true
-
-    }
+    onPressAndHold: {
+        control.checked = true }
 
     onSelectionModeChanged: {
         if (selectionMode === false)
             control.checked = false
     }
-//Добавить редактирование точки и мб добавление нескольких сразу
+//Добавить редактирование точки
 
     contentItem: ColumnLayout{
 
@@ -42,7 +42,6 @@ ItemDelegate {
             }
 
             Item{ Layout.fillWidth: true  }
-
 
             Text {
                 id: temperature
@@ -79,6 +78,16 @@ ItemDelegate {
 
             }
 
+            Button{
+               id: edit
+               text:  "Edit"
+               visible:  currentIndex === index && !selectionMode
+            }
+            Button{
+               id: info
+               text:  "Info"
+               visible: edit.visible
+            }
         }
 
         Flow{

@@ -32,14 +32,16 @@ ApplicationWindow {
     }
 
     Timer {
-           interval: 3600000; running: true; repeat: true
-           onTriggered: listModel.updateInfoAboutPoints()
-       }
+        interval: 3600000; running: true; repeat: true
+        onTriggered: listModel.updateInfoAboutPoints()
+    }
 
     ListView {
         id: listView
         property bool selectionMode: false
         property int selectedPointsCount: 0
+
+        onSelectionModeChanged: currentIndex = -1
 
         anchors.top: columnLayout.bottom
         anchors.right: parent.right
@@ -74,12 +76,12 @@ ApplicationWindow {
 
                 for (var j = 1; j < JsonObject.hourly.length; j++)
                 {
-                     var curDataDiff = Math.abs(dateForRequest - new Date(JsonObject.hourly[j].dt*1000))
-                      if (minDateDiff > curDataDiff)
-                      {
-                          closetstDateDataNumber = j
-                          minDateDiff = curDataDiff
-                      }
+                    var curDataDiff = Math.abs(dateForRequest - new Date(JsonObject.hourly[j].dt*1000))
+                    if (minDateDiff > curDataDiff)
+                    {
+                        closetstDateDataNumber = j
+                        minDateDiff = curDataDiff
+                    }
 
                 }
 
@@ -90,16 +92,19 @@ ApplicationWindow {
 
             function updateInfoAboutPoints() {
                 for(var i = 0; i < count; i++)
-                updateInfoAboutPoint(i)
+                    updateInfoAboutPoint(i)
             }
 
 
 
         }
+
         delegate: PointDelegate {
-            onPressAndHold: listView.selectionMode = true
+            onPressAndHold:  listView.selectionMode = true
             selectionMode: listView.selectionMode
         }
+        //Initial state - items not selected
+        Component.onCompleted: currentIndex = -1
     }
 
     RoundButton {
