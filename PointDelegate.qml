@@ -13,7 +13,7 @@ ItemDelegate {
     onClicked: {
         if (selectionMode)
             control.checked = !control.checked
-        ListView.view.currentIndex = index
+        //ListView.view.currentIndex = index
     }
 
     onPressAndHold:  control.checked = true
