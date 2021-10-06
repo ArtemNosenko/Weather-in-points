@@ -6,7 +6,6 @@ import QtLocation 5.11
 Item {
 
     id: pointDlg
-    visible: true
     readonly property point pointCoordinate: Qt.point(marker.coordinate.latitude, marker.coordinate.longitude)
 
     PositionSource {

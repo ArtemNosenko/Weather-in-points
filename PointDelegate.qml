@@ -13,6 +13,7 @@ ItemDelegate {
     onClicked: {
         if (selectionMode)
             control.checked = !control.checked
+        ListView.view.currentIndex = index
     }
 
     onPressAndHold:  control.checked = true
@@ -21,8 +22,7 @@ ItemDelegate {
         if (selectionMode === false)
             control.checked = false
     }
-
-    // onClicked: ListView.view.currentIndex = index
+//Добавить редактирование точки и мб добавление нескольких сразу
 
     contentItem: ColumnLayout{
 
