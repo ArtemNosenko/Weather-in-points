@@ -5,9 +5,24 @@ import QtQuick.Window 2.3
 
 Dialog {
     id: pointDlg
-    title: "Add new point"
+    title: mode === 0 ?  "Add new point" : "Edit point"
     modal: true
-    standardButtons: DialogButtonBox.Apply |  DialogButtonBox.Ok | DialogButtonBox.Cancel
+    //0 - append mode, 1 - edit  mode
+    property int mode: 0
+    property int editedIndex: -1
+
+    onEditedIndexChanged: {
+        if (editedIndex != -1 && mode === 1){
+            var pointObj = lModel.get(editedIndex)
+            mapdialog.pointCoordinate.x =  pointObj.lat
+            mapdialog.pointCoordinate.y =  pointObj.lon
+            pointNameField.text = pointObj.pointName
+            hoursTumbler.currentIndex = pointObj.hour
+            minutesTumbler.currentIndex = pointObj.minute
+        }
+    }
+
+    standardButtons: mode === 0 ? DialogButtonBox.Apply |  DialogButtonBox.Ok | DialogButtonBox.Cancel : DialogButtonBox.Ok |  DialogButtonBox.Cancel
 
     property  ListModel lModel
     function formatNumber(number){
@@ -15,6 +30,7 @@ Dialog {
     }
 
     onRejected: pointDlg.close()
+
     function createCurrentPoint(){
         var today = new Date()
         lModel.append({
@@ -45,7 +61,20 @@ Dialog {
         lModel.updateInfoAboutPoint(lModel.count - 1)
     }
 
-    onAccepted: createCurrentPoint()
+
+    onAccepted: {
+        if (mode === 0)
+            createCurrentPoint()
+        if (mode === 1)
+        {
+            lModel.setProperty(editedIndex, "lat", mapdialog.pointCoordinate.x)
+            lModel.setProperty(editedIndex, "lon", mapdialog.pointCoordinate.y)
+            lModel.setProperty(editedIndex, "hour", hoursTumbler.currentIndex)
+            lModel.setProperty(editedIndex, "minute", minutesTumbler.currentIndex)
+            lModel.setProperty(editedIndex, "pointName", pointNameField.text)
+            lModel.updateInfoAboutPoint(editedIndex)
+        }
+    }
     Timer{
         id: applyStatusTimer
         interval: 1000;  repeat: false

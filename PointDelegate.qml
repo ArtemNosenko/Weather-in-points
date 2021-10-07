@@ -11,7 +11,9 @@ ItemDelegate {
 
     property bool selectionMode
     readonly property int currentIndex: ListView.view.currentIndex
-   // onCurrentIndexChanged: console.log(currentIndex)
+
+    signal editClicked
+
     onClicked: {
         if (selectionMode)
             control.checked = !control.checked
@@ -82,12 +84,16 @@ ItemDelegate {
                id: edit
                text:  "Edit"
                visible:  currentIndex === index && !selectionMode
+               onClicked: editClicked()
             }
+
             Button{
                id: info
                text:  "Info"
                visible: edit.visible
             }
+
+
         }
 
         Flow{

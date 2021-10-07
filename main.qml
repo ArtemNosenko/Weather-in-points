@@ -102,6 +102,11 @@ ApplicationWindow {
         delegate: PointDelegate {
             onPressAndHold:  listView.selectionMode = true
             selectionMode: listView.selectionMode
+            onEditClicked: {
+                pointDialog.mode = 1
+                pointDialog.editedIndex = listView.currentIndex
+                pointDialog.open()
+            }
         }
         //Initial state - items not selected
         Component.onCompleted: currentIndex = -1
@@ -113,7 +118,11 @@ ApplicationWindow {
         visible: !listView.selectionMode
         anchors.bottom: listView.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        onPressed:  pointDialog.open()
+        onPressed: {
+            pointDialog.mode = 0
+            pointDialog.editedIndex = -1
+            pointDialog.open()
+        }
 
     }
     Button {
