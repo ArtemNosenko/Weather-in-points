@@ -17,7 +17,11 @@ ItemDelegate {
     onClicked: {
         if (selectionMode)
             control.checked = !control.checked
-        ListView.view.currentIndex = index
+        //If clicked when Edit and Info buttons shown - should hide them
+        if (ListView.view.currentIndex !== index)
+            ListView.view.currentIndex = index
+        else
+            ListView.view.currentIndex = -1
     }
     onPressAndHold: {
         control.checked = true }
@@ -26,7 +30,7 @@ ItemDelegate {
         if (selectionMode === false)
             control.checked = false
     }
-//Добавить редактирование точки
+    //Добавить редактирование точки
 
     contentItem: ColumnLayout{
 
@@ -81,16 +85,16 @@ ItemDelegate {
             }
 
             Button{
-               id: edit
-               text:  "Edit"
-               visible:  currentIndex === index && !selectionMode
-               onClicked: editClicked()
+                id: edit
+                text:  "Edit"
+                visible:  currentIndex === index && !selectionMode
+                onClicked: editClicked()
             }
 
             Button{
-               id: info
-               text:  "Info"
-               visible: edit.visible
+                id: info
+                text:  "Info"
+                visible: edit.visible
             }
 
 

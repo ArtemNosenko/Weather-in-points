@@ -102,6 +102,7 @@ ApplicationWindow {
         delegate: PointDelegate {
             onPressAndHold:  listView.selectionMode = true
             selectionMode: listView.selectionMode
+
             onEditClicked: {
                 pointDialog.mode = 1
                 pointDialog.editedIndex = listView.currentIndex
