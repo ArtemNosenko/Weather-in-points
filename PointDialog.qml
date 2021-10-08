@@ -73,7 +73,6 @@ Dialog {
         lModel.updateInfoAboutPoint(lModel.count - 1)
     }
 
-
     onAccepted: {
         if (mode === 0)
             createCurrentPoint()
@@ -99,19 +98,23 @@ Dialog {
         applyStatusTimer.start()
     }
 
-    contentItem: RowLayout{
+    contentItem:  GridLayout{
+        id: grid
+        function isMobilePortrait(){
+            return (Qt.platform.os === "android" || Qt.platform.os === "ios") && Screen.width < Screen.height
+        }
 
+        columns: isMobilePortrait() ? 1 : 2
         MapDialog{
             id: mapdialog
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
         ColumnLayout{
-
-            Layout.leftMargin: 30
+           // Layout.leftMargin:  30
+            Layout.alignment: Qt.AlignHCenter
             RowLayout{
-
-                Layout.leftMargin: 20
+                Layout.leftMargin:  50
                 Tumbler{
                     id: hoursTumbler
                     model: 24
@@ -127,12 +130,17 @@ Dialog {
 
             TextField{
                 id: pointNameField
+                Layout.alignment: Qt.AlignHCenter
                 placeholderText: "Point name"
+                horizontalAlignment:  TextInput.AlignHCenter
             }
             Text { id: applyResult  }
         }
 
     }
+
+
+
 
 }
 
