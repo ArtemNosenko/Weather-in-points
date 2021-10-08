@@ -39,7 +39,7 @@ ItemDelegate {
                 spacing: 0
                 Label{
                     id: dateLbl
-                    readonly property date pointDate: new Date(model.year, model.month,model.day, model.hour,model.minute)
+                    readonly property date pointDate: new Date(model.year, model.month,model.date, model.hour,model.minute)
                     text: pointDate.toLocaleTimeString(window.locale,Locale.ShortFormat)
                 }
                 Label{
@@ -90,15 +90,25 @@ ItemDelegate {
                 visible:  currentIndex === index && !selectionMode
                 onClicked: editClicked()
             }
-
-            Button{
-                id: info
-                text:  "Info"
-                visible: edit.visible
-            }
-
-
         }
+
+        Flow{
+            visible: edit.visible
+            Layout.fillWidth: true
+            anchors.margins: 4
+            spacing: 10
+
+            Text { text: qsTr("Feels like: " + model.feelsLike + ' C°')  }
+            Text { text: qsTr("Pressure: " + model.pressure * 0.750062 + ' mm Hg')} //hPa to mm Hg
+            Text { text: qsTr("Humidity: " + model.humidity + ' %')  }
+            Text { text: qsTr("Cloudiness: " + model.clouds  + ' %' ) }
+            Text { text: qsTr("Visibility: " + model.visibility + ' m') }
+            Text {text:  qsTr("Wind speed: " + model.windSpeed + ' m/s') }
+            Text {visible: model.windDeg !== -1;  text: qsTr("Wind deg: " + model.windDeg + ' degrees') }
+            Text {visible: model.rainVolume !== -1; text: qsTr("Precipitation volume: " + model.rainVolume + ' mm') }
+            Text {visible: model.snowVolume !== -1;  text: qsTr("Snow volume: " + model.snowVolume + ' mm')  }
+            Text { text: qsTr("Dew Point: " + model.dewPoint   + ' C°') }
+}
 
         Flow{
             visible:  model.activated
@@ -120,7 +130,12 @@ ItemDelegate {
 
 
     }
+
+
+
 }
+
+
 //            Label{
 //                text: lat
 //                //  validator: RegExpValidator { regExp: /^(\+|-)?(?:90(?:(?:\.0{1,2})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,2})?))$/ }

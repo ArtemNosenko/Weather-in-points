@@ -9,7 +9,7 @@ Item {
         var db = LocalStorage.openDatabaseSync("MapWeatherPoints", "1.0", "Weather data at a specific points and time", 1000000);
         db.transaction(
                     function(tx) {
-                      // tx.executeSql(' DROP TABLE Points');
+                        // tx.executeSql(' DROP TABLE Points');
                         tx.executeSql('CREATE TABLE IF NOT EXISTS Points(point TEXT, daysToRepeat TEXT)');
 
                         var rs = tx.executeSql('SELECT * FROM Points');
@@ -23,22 +23,33 @@ Item {
                                 daysToRepeat[j] =  JSON.parse(daysToRepeat[j])
 
                             lModel.append({
-                                                 "lat":       objPoint["lat"],
-                                                 "lon":       objPoint["lon"],
-                                                 "year":      objPoint["year"],
-                                                 "month":     objPoint["month"],
-                                                 "day":       objPoint["day"],
-                                                 "hour":      objPoint["hour"],
-                                                 "minute":    objPoint["minute"],
-                                                 "pointName": objPoint["pointName"],
-                                                 "activated": objPoint["activated"],
-                                                 "temp" : objPoint["temp"],
-                                                 "selected" : false,
-                                                 "icon" :     objPoint["icon"],
-                                                 "weatherDescription": objPoint["weatherDescription"],
-                                                 "daysToRepeat" : daysToRepeat
-                                             }
-                                             )
+                                              "lat":       objPoint["lat"],
+                                              "lon":       objPoint["lon"],
+                                              "year":      objPoint["year"],
+                                              "month":     objPoint["month"],
+                                              "date":       objPoint["date"],
+                                              "hour":      objPoint["hour"],
+                                              "minute":    objPoint["minute"],
+                                              "pointName": objPoint["pointName"],
+                                              "activated": objPoint["activated"],
+                                              "temp" : objPoint["temp"],
+                                              "selected" : false,
+                                              "icon" :     objPoint["icon"],
+                                              "weatherDescription": objPoint["weatherDescription"],
+                                              "feelsLike": objPoint["feelsLike"],
+                                              "pressure": objPoint["pressure"],
+                                              "humidity":objPoint["humidity"],
+                                              "dewPoint":objPoint["dewPoint"],
+                                              "clouds":objPoint["clouds"],
+                                              "visibility":objPoint["visibility"],
+                                              "windSpeed":objPoint["windSpeed"],
+                                              "windDeg":objPoint["windDeg"],
+                                              "rainVolume":objPoint["rainVolume"],
+                                              "snowVolume":objPoint["snowVolume"],
+                                              "windGust" : objPoint["windGust"],
+                                              "daysToRepeat" : daysToRepeat
+                                          }
+                                          )
 
 
                             lModel.updateInfoAboutPoint(lModel.count - 1)

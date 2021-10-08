@@ -7,6 +7,8 @@ Dialog {
     id: pointDlg
     title: mode === 0 ?  "Add new point" : "Edit point"
     modal: true
+
+    property  ListModel lModel
     //0 - append mode, 1 - edit  mode
     property int mode: 0
     property int editedIndex: -1
@@ -24,7 +26,6 @@ Dialog {
 
     standardButtons: mode === 0 ? DialogButtonBox.Apply |  DialogButtonBox.Ok | DialogButtonBox.Cancel : DialogButtonBox.Ok |  DialogButtonBox.Cancel
 
-    property  ListModel lModel
     function formatNumber(number){
         return number < 10 && number >= 0 ? "0" + number : number.toString()
     }
@@ -38,15 +39,26 @@ Dialog {
                           "lon": mapdialog.pointCoordinate.y,
                           "year": today.getFullYear(),
                           "month": today.getMonth(),
-                          "day": today.getDate(),
+                          "date": today.getDate(),
                           "hour": hoursTumbler.currentIndex,
                           "minute": minutesTumbler.currentIndex,
                           "pointName": pointNameField.text,
                           "activated": false,
                           "selected" : false,
-                          "temp" : '',
+                          "temp" : 0,
                           "icon" :'',
                           "weatherDescription": '',
+                          "feelsLike": 0,
+                          "pressure": 0,
+                          "humidity":0,
+                          "dewPoint":0,
+                          "clouds":0,
+                          "visibility":0,
+                          "windSpeed":0,
+                          "windDeg":0,
+                          "windGust":-1,
+                          "rainVolume":-1,
+                          "snowVolume":-1,
                           "daysToRepeat" : [
                               {"dayOfWeek": 1, "repeat" : false},
                               {"dayOfWeek": 2, "repeat" : false},

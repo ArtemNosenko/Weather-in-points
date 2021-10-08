@@ -84,10 +84,25 @@ ApplicationWindow {
                     }
 
                 }
+                setProperty(number,"icon","http://openweathermap.org/img/wn/" +  JsonObject.hourly[closetstDateDataNumber].weather[0].icon + "@2x.png")
+                setProperty(number,"weatherDescription",JsonObject.hourly[closetstDateDataNumber].weather[0].description)
+                setProperty(number,"temp",parseInt (JsonObject.hourly[closetstDateDataNumber].temp) - 273 )  //K to C
+                setProperty(number,"feelsLike",parseInt (JsonObject.hourly[closetstDateDataNumber].feels_like) - 273)
+                setProperty(number,"pressure",JsonObject.hourly[closetstDateDataNumber].pressure)
+                setProperty(number,"humidity",JsonObject.hourly[closetstDateDataNumber].humidity)
+                setProperty(number,"dewPoint",parseInt (JsonObject.hourly[closetstDateDataNumber].dew_point) - 273)
+                setProperty(number,"clouds",JsonObject.hourly[closetstDateDataNumber].clouds)
+                setProperty(number,"visibility",JsonObject.hourly[closetstDateDataNumber].visibility)
+                setProperty(number,"windSpeed",JsonObject.hourly[closetstDateDataNumber].wind_speed)
+                setProperty(number,"windDeg",JsonObject.hourly[closetstDateDataNumber].wind_deg)
+                if (JsonObject.hourly[closetstDateDataNumber].rain !== undefined)
+                    setProperty(number,"rainVolume",JsonObject.hourly[closetstDateDataNumber].rain)
+                if (JsonObject.hourly[closetstDateDataNumber].snow !== undefined)
+                    setProperty(number,"snowVolume",JsonObject.hourly[closetstDateDataNumber].snow)
+                if (JsonObject.hourly[closetstDateDataNumber].wind_gust !== undefined)
+                    setProperty(number,"windGust",JsonObject.hourly[closetstDateDataNumber].wind_gust)
 
-                get(number).icon = "http://openweathermap.org/img/wn/" +  JsonObject.hourly[closetstDateDataNumber].weather[0].icon + "@2x.png"
-                get(number).weatherDescription = JsonObject.hourly[closetstDateDataNumber].weather[0].description
-                get(number).temp = (parseInt (JsonObject.hourly[closetstDateDataNumber].temp) - 273).toString() //K to C
+
             }
 
             function updateInfoAboutPoints() {
@@ -108,6 +123,8 @@ ApplicationWindow {
                 pointDialog.editedIndex = listView.currentIndex
                 pointDialog.open()
             }
+
+
         }
         //Initial state - items not selected
         Component.onCompleted: currentIndex = -1
