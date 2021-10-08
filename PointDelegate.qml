@@ -30,7 +30,6 @@ ItemDelegate {
         if (selectionMode === false)
             control.checked = false
     }
-    //Добавить редактирование точки
 
     contentItem: ColumnLayout{
 

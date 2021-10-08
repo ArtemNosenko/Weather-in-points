@@ -17,20 +17,29 @@ add_compile_options(
           -Wredundant-decls
      )
 
+
 # QtCreator supports the following variables for Android, which are identical to qmake Android variables.
 # Check http://doc.qt.io/qt-5/deployment-android.html for more information.
 # They need to be set before the find_package(Qt5 ...) call.
 
-#if(ANDROID)
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-#    if (ANDROID_ABI STREQUAL "armeabi-v7a")
-#        set(ANDROID_EXTRA_LIBS
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
-#    endif()
-#endif()
+if(ANDROID)
+    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+   # if (ANDROID_ABI STREQUAL "armeabi-v7a")
+   #     set(ANDROID_EXTRA_LIBS
+   #         ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
+   #         ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
+   # endif()
+    set(DISTFILES
+        ${DISTFILES}
+        android/AndroidManifest.xml
+        android/build.gradle
+        android/res/values/libs.xml)
+endif()
 
-#include_directories(/thirdparty/boost)
+
+include_directories(/opt/boost_1_76_0)
+
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty)
 
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

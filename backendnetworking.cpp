@@ -1,20 +1,28 @@
 #include "backendnetworking.h"
 
 
-#include "thirdparty/boost/beast/core.hpp"
-#include "thirdparty/boost/beast/http.hpp"
-#include "thirdparty/boost/beast/version.hpp"
-#include "thirdparty/boost/asio/connect.hpp"
-#include "thirdparty/boost/asio/ip/tcp.hpp"
+//#include "thirdparty/boost/beast/core.hpp"
+//#include "thirdparty/boost/beast/http.hpp"
+//#include "thirdparty/boost/beast/version.hpp"
+//#include "thirdparty/boost/asio/connect.hpp"
+//#include "thirdparty/boost/asio/ip/tcp.hpp"
+
+
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/version.hpp>
+#include <boost/asio/connect.hpp>
+#include <boost/asio/ip/tcp.hpp>
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
 
 
-namespace beast = boost::beast;     // from "thirdparty/boost/beast.hpp>
-namespace http = beast::http;       // from "thirdparty/boost/beast/http.hpp>
-namespace net = boost::asio;        // from "thirdparty/boost/asio.hpp>
-using tcp = net::ip::tcp;           // from "thirdparty/boost/asio/ip/tcp.hpp>
+namespace beast = boost::beast;
+namespace http = beast::http;
+namespace net = boost::asio;
+using tcp = net::ip::tcp;
 
 
 BackEndNetworking::BackEndNetworking(QObject *parent) : QObject(parent)

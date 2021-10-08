@@ -4,16 +4,13 @@ import QtQuick 2.0
 import QtQuick.Window 2.14
 import QtLocation 5.11
 Item {
-
     id: pointDlg
     readonly property point pointCoordinate: Qt.point(marker.coordinate.latitude, marker.coordinate.longitude)
-
     PositionSource {
         id: userPos
         updateInterval: 100000
         active: true
     }
-
 
     Map {
         id: mapView
@@ -49,5 +46,6 @@ Item {
 
 
     }
+
 
 }
