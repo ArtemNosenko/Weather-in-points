@@ -1,7 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Window 2.3
 import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
+import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.0
 
 import io.qt.backendnetworking 1.0
@@ -14,7 +14,7 @@ ApplicationWindow {
     title: qsTr("Points")
     property bool initialyLoadedData: false
 
-    SaveLoadData{
+    SaveLoadData {
         id: saveLoadData
         lModel: listModel
     }
@@ -24,15 +24,16 @@ ApplicationWindow {
     }
     onClosing: saveLoadData.saveData()
 
-
-    BackEndNetworking{
+    BackEndNetworking {
         id: backEnd
         host: "api.openweathermap.org"
         request: "/data/2.5/onecall?lat=55.75&lon=37.88&exclude=daily&appid=491a54922af0f56f87b30ee988483263"
     }
 
     Timer {
-        interval: 3600000; running: true; repeat: true
+        interval: 3600000
+        running: true
+        repeat: true
         onTriggered: listModel.updateInfoAboutPoints()
     }
 
@@ -43,23 +44,24 @@ ApplicationWindow {
 
         onSelectionModeChanged: currentIndex = -1
 
-        anchors.top: columnLayout.bottom
+        anchors.top: selectedItemsInfoColumn.bottom
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.left: parent.left
 
-        onCountChanged:{
+        onCountChanged: {
             if (initialyLoadedData)
                 saveLoadData.saveData()
             else
                 initialyLoadedData = true
         }
         model: ListModel {
-            id : listModel
+            id: listModel
 
-            function updateInfoAboutPoint(number){
-                backEnd.request = "/data/2.5/onecall?lat=" + get(number).lat + '&lon=' +
-                        get(number).lon +  "&exclude=daily&appid=491a54922af0f56f87b30ee988483263"
+            function updateInfoAboutPoint(number) {
+                backEnd.request = "/data/2.5/onecall?lat=" + get(
+                            number).lat + '&lon=' + get(
+                            number).lon + "&exclude=daily&appid=491a54922af0f56f87b30ee988483263"
 
                 var JsonString = backEnd.run()
                 var JsonObject = JSON.parse(JsonString)
@@ -72,50 +74,60 @@ ApplicationWindow {
                 if (dateForRequest < new Date())
                     dateForRequest.setDate(dateForRequest.getDate() + 1)
 
-                var minDateDiff = Math.abs(dateForRequest - new Date(JsonObject.hourly[0].dt*1000))
+                var minDateDiff = Math.abs(
+                            dateForRequest - new Date(JsonObject.hourly[0].dt * 1000))
 
-                for (var j = 1; j < JsonObject.hourly.length; j++)
-                {
-                    var curDataDiff = Math.abs(dateForRequest - new Date(JsonObject.hourly[j].dt*1000))
-                    if (minDateDiff > curDataDiff)
-                    {
+                for (var j = 1; j < JsonObject.hourly.length; j++) {
+                    var curDataDiff = Math.abs(
+                                dateForRequest - new Date(JsonObject.hourly[j].dt * 1000))
+                    if (minDateDiff > curDataDiff) {
                         closetstDateDataNumber = j
                         minDateDiff = curDataDiff
                     }
-
                 }
-                setProperty(number,"icon","http://openweathermap.org/img/wn/" +  JsonObject.hourly[closetstDateDataNumber].weather[0].icon + "@2x.png")
-                setProperty(number,"weatherDescription",JsonObject.hourly[closetstDateDataNumber].weather[0].description)
-                setProperty(number,"temp",parseInt (JsonObject.hourly[closetstDateDataNumber].temp) - 273 )  //K to C
-                setProperty(number,"feelsLike",parseInt (JsonObject.hourly[closetstDateDataNumber].feels_like) - 273)
-                setProperty(number,"pressure",JsonObject.hourly[closetstDateDataNumber].pressure)
-                setProperty(number,"humidity",JsonObject.hourly[closetstDateDataNumber].humidity)
-                setProperty(number,"dewPoint",parseInt (JsonObject.hourly[closetstDateDataNumber].dew_point) - 273)
-                setProperty(number,"clouds",JsonObject.hourly[closetstDateDataNumber].clouds)
-                setProperty(number,"visibility",JsonObject.hourly[closetstDateDataNumber].visibility)
-                setProperty(number,"windSpeed",JsonObject.hourly[closetstDateDataNumber].wind_speed)
-                setProperty(number,"windDeg",JsonObject.hourly[closetstDateDataNumber].wind_deg)
+                setProperty(number, "icon", "http://openweathermap.org/img/wn/"
+                            + JsonObject.hourly[closetstDateDataNumber].weather[0].icon + "@2x.png")
+                setProperty(number, "weatherDescription",
+                            JsonObject.hourly[closetstDateDataNumber].weather[0].description)
+                setProperty(number, "temp", parseInt(
+                                JsonObject.hourly[closetstDateDataNumber].temp) - 273) //K to C
+                setProperty(number, "feelsLike", parseInt(
+                                JsonObject.hourly[closetstDateDataNumber].feels_like) - 273)
+                setProperty(number, "pressure",
+                            JsonObject.hourly[closetstDateDataNumber].pressure)
+                setProperty(number, "humidity",
+                            JsonObject.hourly[closetstDateDataNumber].humidity)
+                setProperty(number, "dewPoint", parseInt(
+                                JsonObject.hourly[closetstDateDataNumber].dew_point) - 273)
+                setProperty(number, "clouds",
+                            JsonObject.hourly[closetstDateDataNumber].clouds)
+                setProperty(number, "visibility",
+                            JsonObject.hourly[closetstDateDataNumber].visibility)
+                setProperty(number, "windSpeed",
+                            JsonObject.hourly[closetstDateDataNumber].wind_speed)
+                setProperty(number, "windDeg",
+                            JsonObject.hourly[closetstDateDataNumber].wind_deg)
                 if (JsonObject.hourly[closetstDateDataNumber].rain !== undefined)
-                    setProperty(number,"rainVolume",JsonObject.hourly[closetstDateDataNumber].rain)
+                    setProperty(number, "rainVolume",
+                                JsonObject.hourly[closetstDateDataNumber].rain)
                 if (JsonObject.hourly[closetstDateDataNumber].snow !== undefined)
-                    setProperty(number,"snowVolume",JsonObject.hourly[closetstDateDataNumber].snow)
+                    setProperty(number, "snowVolume",
+                                JsonObject.hourly[closetstDateDataNumber].snow)
                 if (JsonObject.hourly[closetstDateDataNumber].wind_gust !== undefined)
-                    setProperty(number,"windGust",JsonObject.hourly[closetstDateDataNumber].wind_gust)
+                    setProperty(number, "windGust",
+                                JsonObject.hourly[closetstDateDataNumber].wind_gust)
 
 
             }
 
             function updateInfoAboutPoints() {
-                for(var i = 0; i < count; i++)
+                for (var i = 0; i < count; i++)
                     updateInfoAboutPoint(i)
             }
-
-
-
         }
 
         delegate: PointDelegate {
-            onPressAndHold:  listView.selectionMode = true
+            onPressAndHold: listView.selectionMode = true
             selectionMode: listView.selectionMode
 
             onEditClicked: {
@@ -123,8 +135,6 @@ ApplicationWindow {
                 pointDialog.editedIndex = listView.currentIndex
                 pointDialog.open()
             }
-
-
         }
         //Initial state - items not selected
         Component.onCompleted: currentIndex = -1
@@ -141,7 +151,6 @@ ApplicationWindow {
             pointDialog.editedIndex = -1
             pointDialog.open()
         }
-
     }
     Button {
         id: delButton
@@ -150,16 +159,17 @@ ApplicationWindow {
         visible: listView.selectionMode
         anchors.bottom: listView.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        onPressed:  deleteDialog.open()
-
+        onPressed: deleteDialog.open()
     }
 
     ColumnLayout {
-        id: columnLayout
+        id: selectedItemsInfoColumn
         spacing: 0
-
+        // @disable-check M16
         visible: listView.selectionMode
+        // @disable-check M16
         width: window.width
+        // @disable-check M16
         height: visible ? 50 : 0
 
         RoundButton {
@@ -180,11 +190,11 @@ ApplicationWindow {
             height: roundButton.height
             text: "Selected: " + listView.selectedPointsCount
             color: Material.foreground
-            Layout.alignment:   Qt.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter
         }
     }
 
-    PointDialog{
+    PointDialog {
         id: pointDialog
         width: window.width
         height: window.height
@@ -204,19 +214,14 @@ ApplicationWindow {
 
         onAccepted: {
             var indexOffset = 0
-            for (var i = 0; i < listModel.count; i++)
-            {
-                if (listModel.get(i).selected)
-                {
-                    listModel.remove(i,1)
+            for (var i = 0; i < listModel.count; i++) {
+                if (listModel.get(i).selected) {
+                    listModel.remove(i, 1)
                     i--
                 }
             }
             listView.selectionMode = false
         }
         onRejected: close()
-
     }
-
 }
-

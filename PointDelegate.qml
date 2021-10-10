@@ -86,7 +86,7 @@ ItemDelegate {
             Button{
                 id: edit
                 text:  "Edit"
-                visible:  currentIndex === index && !selectionMode
+                visible:  currentIndex === model.index && !selectionMode
                 onClicked: editClicked()
             }
         }

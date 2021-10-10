@@ -34,39 +34,47 @@ if(ANDROID)
         android/AndroidManifest.xml
         android/build.gradle
         android/res/values/libs.xml)
-endif()
 
+    set(OTHER_FILES
+        android/src/org/ArtemNosenko/WeatherInPoints/NotificationClient.java )
+    find_package(Qt5 COMPONENTS AndroidExtras REQUIRED)
+endif()
 
 include_directories(/opt/boost_1_76_0)
 
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty)
 
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(Threads REQUIRED)
-find_package(Qt5 COMPONENTS Core Quick Location REQUIRED)
+find_package(Qt5 COMPONENTS Core Quick Location  REQUIRED)
 
 
 #Заголовочные файлы
 set(HEADERS
-    backendnetworking.h)
+    backendnetworking.h
+    notificationclient.h)
 #Файлы исходных кодов
 set(SOURCES
         main.cpp
         backendnetworking.cpp
+        notificationclient.cpp
         qml.qrc
     )
 
 
 
+#set(ANDROID_PACKAGE_SOURCE_DIR  $$PWD/android)
 if(ANDROID)
-    add_library(weatherInPoints SHARED ${HEADERS} ${SOURCES} )
+    add_library(weatherInPoints SHARED ${HEADERS} ${SOURCES}  ${OTHER_FILES})
 else()
-    add_executable(weatherInPoints ${HEADERS} ${SOURCES})
+    add_executable(weatherInPoints ${HEADERS} ${SOURCES} )
 endif()
 
 target_compile_definitions(weatherInPoints
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
-target_link_libraries(weatherInPoints
-  PRIVATE Qt5::Core Qt5::Quick Threads::Threads)
+if (ANDROID)
+    target_link_libraries(weatherInPoints PRIVATE Qt5::Core Qt5::Quick Qt5::AndroidExtras Threads::Threads)
+else()
+    target_link_libraries(weatherInPoints PRIVATE Qt5::Core Qt5::Quick Threads::Threads)
+endif()
