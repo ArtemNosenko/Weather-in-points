@@ -3,9 +3,8 @@
 #include <QtQuick>
 
 #include "backendnetworking.h"
-#if defined Q_OS_ANDROID
 #include "notificationclient.h"
-#endif
+
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

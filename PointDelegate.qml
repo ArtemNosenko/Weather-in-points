@@ -40,6 +40,7 @@ ItemDelegate {
                     id: dateLbl
                     readonly property date pointDate: new Date(model.year, model.month,model.date, model.hour,model.minute)
                     text: pointDate.toLocaleTimeString(window.locale,Locale.ShortFormat)
+                    onPointDateChanged:  notificationTimer.setNotificationTimer()
                 }
                 Label{
                     text: model.pointName
@@ -57,10 +58,6 @@ ItemDelegate {
                 id: icon
                 source: model.icon
                 sourceSize.width: 50
-            }
-            Text {
-                id: description
-                text: model.weatherDescription
             }
 
 
@@ -97,6 +94,7 @@ ItemDelegate {
             anchors.margins: 4
             spacing: 10
 
+            Text { text: qsTr("Description: " + model.weatherDescription)  }
             Text { text: qsTr("Feels like: " + model.feelsLike + ' C°')  }
             Text { text: qsTr("Pressure: " + model.pressure * 0.750062 + ' mm Hg')} //hPa to mm Hg
             Text { text: qsTr("Humidity: " + model.humidity + ' %')  }
@@ -130,7 +128,48 @@ ItemDelegate {
 
     }
 
+Timer{
+    id: notificationTimer
+    function setNotificationTimer(){
 
+        const curDate = new Date()
+        var dateToNotification = dateLbl.pointDate
+        dateToNotification.setFullYear(curDate.getFullYear())
+        dateToNotification.setMonth(curDate.getMonth())
+        dateToNotification.setDate(curDate.getDate())
+        //hanf hour before actual pointTime
+        dateToNotification.setMinutes(dateToNotification.getMinutes() - 30)
+        if (curDate > dateToNotification)
+            dateToNotification.setDate(dateToNotification.getDate() + 1)
+
+        interval = dateToNotification - curDate
+        console.log(interval)
+        start()
+
+
+
+    }
+
+    onTriggered: {
+
+        var curDay = new Date().getDay()
+        //Week day order
+        if (curDay !== 0)
+            curDay = curDay - 1
+        else
+            curDay = 6
+
+        if ( daysToRepeat.get(curDay).repeat)
+        {
+            listModel.updateInfoAboutPoint(model.index)
+            notificationClient.notificationTitle = 'Weather in point ' + model.pointName
+            notificationClient.notification = temperature.text + ' ' + model.weatherDescription
+            notificationClient.updateNotification()
+        }
+
+        setNotificationTimer()
+    }
+}
 
 }
 

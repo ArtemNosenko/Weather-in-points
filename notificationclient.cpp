@@ -86,6 +86,7 @@ void NotificationClient::updateNotification()
         javaNotificationTitle.object<jstring>(),
         javaNotification.object<jstring>());
 #endif
+
 }
 
 const QString &NotificationClient::notificationTitle() const

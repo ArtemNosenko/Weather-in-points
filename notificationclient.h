@@ -67,13 +67,14 @@ public:
     const QString &notificationTitle() const;
     void setNotificationTitle(const QString &newNotificationTitle);
 
+public slots:
+    void updateNotification();
+
 signals:
     void notificationChanged();
 
     void notificationTitleChanged();
 
-private slots:
-    void updateNotification();
 
 private:
     QString m_notification;
