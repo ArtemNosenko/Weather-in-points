@@ -120,7 +120,10 @@ ItemDelegate {
                     checked: model.repeat
                     checkable: true
                     Material.background: checked ? Material.accent : "transparent"
-                    onToggled:  model.repeat = checked
+                    onToggled: { model.repeat = checked
+                        qtAndroidService.sendToService("test")
+                    }
+
                 }
             }
         }
@@ -162,9 +165,7 @@ Timer{
         if ( daysToRepeat.get(curDay).repeat)
         {
             listModel.updateInfoAboutPoint(model.index)
-            notificationClient.notificationTitle = 'Weather in point ' + model.pointName
-            notificationClient.notification = temperature.text + ' ' + model.weatherDescription
-            notificationClient.updateNotification()
+            qtAndroidService.sendToService(model.pointName)
         }
 
         setNotificationTimer()

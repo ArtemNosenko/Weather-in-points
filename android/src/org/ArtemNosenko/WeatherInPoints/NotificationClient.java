@@ -59,6 +59,12 @@ import android.graphics.Color;
 import android.graphics.BitmapFactory;
 import android.app.NotificationChannel;
 
+
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 public class NotificationClient
 {
     private static NotificationManager m_notificationManager;
@@ -66,7 +72,36 @@ public class NotificationClient
 
     public NotificationClient() {}
 
+    private static native void callNativeOne(int x);
+
     public static void notify(Context context,String title, String message) {
+
+       callNativeOne(3);
+       // Log.i("NotifCl", testNative);
+
+//        DBHelper dbHelper = new DBHelper(context);
+//        SQLiteDatabase db =  dbHelper.getReadableDatabase();
+//        Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+//        Log.i("NotifCl", db.getPath());
+//        if (c.moveToFirst()) {
+//            while ( !c.isAfterLast() ) {
+//                Log.i("NotifCl",c.getString(c.getColumnIndex("name")));
+//                c.moveToNext();
+//            }
+//        }
+//        Cursor cursor = db.query("Points",
+//                new String[] {"pointName"},
+//                null, null, null, null, null);
+
+//                        if (cursor.moveToFirst()) {
+//                            while ( !c.isAfterLast() ) {
+//                                Log.i("NotifCl", cursor.getString(0));
+//                                cursor.moveToNext();
+//                            }
+//                        }
+
+
+
         try {
             m_notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 

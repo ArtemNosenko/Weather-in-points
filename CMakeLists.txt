@@ -22,6 +22,8 @@ add_compile_options(
 # Check http://doc.qt.io/qt-5/deployment-android.html for more information.
 # They need to be set before the find_package(Qt5 ...) call.
 
+
+
 if(ANDROID)
     set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
    # if (ANDROID_ABI STREQUAL "armeabi-v7a")
@@ -36,19 +38,23 @@ if(ANDROID)
         android/res/values/libs.xml)
 
     set(OTHER_FILES
-        android/src/org/ArtemNosenko/WeatherInPoints/NotificationClient.java )
+        android/src/org/ArtemNosenko/WeatherInPoints/NotificationClient.java
+        android/build.gradle
+        android/gradle.properties
+        android/gradle/wrapper/gradle-wrapper.jar
+        android/gradle/wrapper/gradle-wrapper.properties
+        android/gradlew
+        android/gradlew.bat
+        android/res/values/libs.xml
+        android/src/org/ArtemNosenko/WeatherInPoints/MyStartServiceReceiver.java
+        android/src/org/ArtemNosenko/WeatherInPoints/QtAndroidService.java
+        android/AndroidManifest.xml
+        )
     find_package(Qt5 COMPONENTS AndroidExtras REQUIRED)
+
+
+
 endif()
-
-include_directories(/opt/boost_1_76_0)
-
-
-
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-
-find_package(Threads REQUIRED)
-find_package(Qt5 COMPONENTS Core Quick Location  REQUIRED)
-
 
 #Заголовочные файлы
 set(HEADERS
@@ -61,6 +67,29 @@ set(SOURCES
         notificationclient.cpp
         qml.qrc
     )
+
+if (ANDROID)
+    set(HEADERS
+        ${HEADERS}
+         qtandroidservice.h)
+
+     set(SOURCES
+         ${SOURCES}
+         qtandroidservice.cpp
+         )
+endif()
+
+include_directories(/opt/boost_1_76_0)
+
+
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+
+find_package(Threads REQUIRED)
+find_package(Qt5 COMPONENTS Core Quick Location  REQUIRED)
+
+
+
 
 
 

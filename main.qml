@@ -14,6 +14,11 @@ ApplicationWindow {
     title: qsTr("Points")
     property bool initialyLoadedData: false
 
+    function updateWeatherDatabase(){
+        listModel.updateInfoAboutPoints()
+        saveLoadData.saveData()
+    }
+
     SaveLoadData {
         id: saveLoadData
         lModel: listModel
@@ -27,7 +32,6 @@ ApplicationWindow {
     BackEndNetworking {
         id: backEnd
         host: "api.openweathermap.org"
-        request: "/data/2.5/onecall?lat=55.75&lon=37.88&exclude=daily&appid=491a54922af0f56f87b30ee988483263"
     }
 
     Timer {

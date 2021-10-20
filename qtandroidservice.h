@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the QtAndroidExtras module of the Qt Toolkit.
@@ -48,59 +48,28 @@
 **
 ****************************************************************************/
 
-#include "notificationclient.h"
+#ifndef QTANDROIDSERVICE_H
+#define QTANDROIDSERVICE_H
 
-#if defined Q_OS_ANDROID
+#include <QObject>
 #include <QtAndroid>
-#endif
+#include <QAndroidIntent>
 
-
-
-
-NotificationClient::NotificationClient(QObject *parent)
-    : QObject(parent)
+class QtAndroidService : public QObject
 {
-}
+    Q_OBJECT
 
-void NotificationClient::setNotification(const QString &notification)
-{
-    if (m_notification == notification)
-        return;
+public:
+    QtAndroidService(QObject *parent = nullptr);
 
-    m_notification = notification;
-    emit notificationChanged();
-}
+    static QtAndroidService *instance() { return m_instance; }
+    Q_INVOKABLE void sendToService(const QString &name);
 
-QString NotificationClient::notification() const
-{
-    return m_notification;
-}
+signals:
+    void messageFromService(const QString &message);
 
-void NotificationClient::updateNotification()
-{
-#if defined Q_OS_ANDROID
-    QAndroidJniObject javaNotification = QAndroidJniObject::fromString(m_notification);
-    QAndroidJniObject javaNotificationTitle = QAndroidJniObject::fromString(m_notificationTitle);
-    QAndroidJniObject::callStaticMethod<void>(
-        "org/ArtemNosenko/WeatherInPoints/NotificationClient",
-        "notify",
-        "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
-        QtAndroid::androidContext().object(),
-        javaNotificationTitle.object<jstring>(),
-        javaNotification.object<jstring>());
-#endif
+private:
+    static QtAndroidService *m_instance;
+};
 
-}
-
-const QString &NotificationClient::notificationTitle() const
-{
-    return m_notificationTitle;
-}
-
-void NotificationClient::setNotificationTitle(const QString &newNotificationTitle)
-{
-    if (m_notificationTitle == newNotificationTitle)
-        return;
-    m_notificationTitle = newNotificationTitle;
-    emit notificationTitleChanged();
-}
+#endif // QTANDROIDSERVICE_H
