@@ -52,19 +52,8 @@ package org.ArtemNosenko.WeatherInPoints;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
-import android.app.PendingIntent;
-import android.graphics.Color;
-import android.graphics.BitmapFactory;
 import android.app.NotificationChannel;
-
-import android.util.Log;
-import android.app.Service;
-import android.os.IBinder;
-
-import android.os.CountDownTimer;
-
-import android.app.AlarmManager;
+import android.support.v4.app.NotificationCompat;
 
 public class NotificationClient
 {
@@ -72,18 +61,18 @@ public class NotificationClient
     public NotificationClient() {}
 
 
-    public static void notify(Context context,String title, String message) {
+    public static  void notify(Context context, String title, String text,int notifyId){
 
-        Intent intentAlarm = new Intent(context,MyStartServiceReceiver.class);
+       NotificationChannel channel = new NotificationChannel("Qt", "Qt Notifier", NotificationManager.IMPORTANCE_HIGH);
 
-        intentAlarm.putExtra("title",title);
-        intentAlarm.putExtra("text",message);
+       NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+       notificationManager.createNotificationChannel(channel);
 
-        intentAlarm.putExtra("action","notify");
-
-        PendingIntent pi =  PendingIntent.getBroadcast(context,1,intentAlarm,PendingIntent.FLAG_UPDATE_CURRENT);
-        long curTime = System.currentTimeMillis();
-        AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarm.setExact(AlarmManager.RTC_WAKEUP,curTime + 4000,pi);
+       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Qt")
+                        .setContentTitle(title)
+                        .setContentText(text)
+                        .setSmallIcon(R.drawable.icon);
+        notificationManager.notify(notifyId, builder.build());
 }
+
 }

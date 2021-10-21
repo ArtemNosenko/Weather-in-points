@@ -49,6 +49,7 @@ if(ANDROID)
         android/src/org/ArtemNosenko/WeatherInPoints/MyStartServiceReceiver.java
         android/src/org/ArtemNosenko/WeatherInPoints/QtAndroidService.java
         android/src/org/ArtemNosenko/WeatherInPoints/DbHelper.java
+        android/src/org/ArtemNosenko/WeatherInPoints/HTTPrequestHelper.java
         android/AndroidManifest.xml
         )
     find_package(Qt5 COMPONENTS AndroidExtras REQUIRED)
