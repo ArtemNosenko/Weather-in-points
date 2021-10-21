@@ -70,34 +70,41 @@ public class QtAndroidService extends Service
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "Creating Service");
+        //Log.i(TAG, "Creating Service");
 
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "Destroying Service");
+        //Log.i(TAG, "Destroying Service");
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int ret = super.onStartCommand(intent, flags, startId);
-        Log.i(TAG, "onStartCommand: ");
 
         Intent intentAlarm = new Intent(this,MyStartServiceReceiver.class);
-        intentAlarm.setAction("notifyIfNeeded");
         PendingIntent pi =  PendingIntent.getBroadcast(this,0,intentAlarm,PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
 
-        Calendar updateTime = Calendar.getInstance();
-
-        //Что б не стартовал несколько раз
-        //alarm.cancel(pi);
-        alarm.setExact(AlarmManager.RTC_WAKEUP, updateTime.getTimeInMillis(), pi);
+        String name = new String(intent.getByteArrayExtra("action"));
+        //Log.i(TAG, "onStartCommand: " + name);
+        if (name.equals("set"))
+        {
+            Calendar updateTime = Calendar.getInstance();
+            alarm.setExact(AlarmManager.RTC_WAKEUP, updateTime.getTimeInMillis() + 1000*60*30, pi);//30 minutes
+        }
+        if (name.equals("cancel"))
+        {
+            alarm.cancel(pi);
+        }
 
         return ret;
     }
+
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;

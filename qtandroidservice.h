@@ -63,6 +63,7 @@ public:
     QtAndroidService(QObject *parent = nullptr);
 
     Q_INVOKABLE void startService();
+    Q_INVOKABLE void cancelNotification();
 };
 
 #endif // QTANDROIDSERVICE_H

@@ -26,18 +26,6 @@ public class MyStartServiceReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-       Log.i("MyStartServiceReceiver", "onReceive ");
-
-        String action = intent.getAction();
-        if(action != null) {
-            Log.i(TAG + " Action",action);
-            //Если произошла перезагрузка, то нужно запустить сервер
-            if(!action.equals("notifyIfNeeded")) {
-                Intent startServiceIntent = new Intent(context, QtAndroidService.class);
-                context.startService(startServiceIntent);
-            }
-        }
-
       DbHelper dbhelper = new DbHelper(context);
       JSONObject jo =  dbhelper.getFirstPointInTime();
 
@@ -46,7 +34,7 @@ public class MyStartServiceReceiver extends BroadcastReceiver {
       try {
         pDate.setHours(Integer.parseInt(jo.getString("hour")));
         pDate.setMinutes(Integer.parseInt(jo.getString("minute")));
-       }catch (JSONException e) {Log.i("MyStartServiceReceiver","JSONException");}
+       }catch (JSONException e) {Log.i(TAG,"exeption1");}
 
 
       if (pDate.getTime() < System.currentTimeMillis() + 1.5*3600*1000 &&  pDate.getTime()  >= System.currentTimeMillis() + 3600*1000) {//updateDb
@@ -66,14 +54,32 @@ public class MyStartServiceReceiver extends BroadcastReceiver {
              try {
                  JSONObject joPoint = new JSONObject(js);
 
-                 Log.i(TAG,joPoint.getString("pointName") + " " + "notifyOnReceive");
+                 //Log.i(TAG,joPoint.getString("pointName") + " " + "notifyOnReceive");
                  NotificationClient.notify(context,joPoint.getString("pointName") , "Temp: " + joPoint.getString("temp"),notifyId);
                  notifyId++;
-                 } catch (JSONException e) {Log.i(TAG,"exeption1");}
+                 } catch (JSONException e) {Log.i(TAG,"exeption2");}
           }
 
      }
-    }
+
+//т.к. repeating alarm не работает, то каждый раз буду стартовать так
+//String action = intent.getAction();
+//    if(action != null) {
+//     //Log.i(TAG + " Action",action);
+
+//    if(action.equals("AlarmFromService")) {
+//        Intent startServiceIntent = new Intent(context, QtAndroidService.class);
+//        context.startService(startServiceIntent);
+//    }
+//}
+    Intent startServiceIntent = new Intent(context, QtAndroidService.class);
+    String extra = new String("set");
+    startServiceIntent.putExtra("action",extra.getBytes());
+    context.startService(startServiceIntent);
+}
+
+
+
 }
 
 

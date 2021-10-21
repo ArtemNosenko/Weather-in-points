@@ -158,11 +158,18 @@ ApplicationWindow {
         }
     }
     Button{
-        id:test
-        text: "test"
+        id:startAlarm
+        text: "startAlarm"
         anchors.bottom: listView.bottom
         anchors.left: addButton.right
         onClicked: qtAndroidService.startService()
+    }
+    Button{
+        id: stopAlarm
+        text: "stopAlarm"
+        anchors.bottom: listView.bottom
+        anchors.left: startAlarm.right
+        onClicked: qtAndroidService.cancelNotification()
     }
     Button {
         id: delButton

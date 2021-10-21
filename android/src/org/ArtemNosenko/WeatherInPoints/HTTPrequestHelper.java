@@ -24,13 +24,13 @@ public class HTTPrequestHelper{
     public HTTPrequestHelper(Context context){
         _cont = context;
         mRequestQueue = Volley.newRequestQueue(_cont);
-        Log.i("HTTPrequestHelper","Constr");
+        //Log.i("HTTPrequestHelper","Constr");
         }
 
     void updatePoint(String pointId){
         _pointId = pointId;
 
-        Log.i("HTTPrequestHelper","updatePoint");
+        //Log.i("HTTPrequestHelper","updatePoint");
         DbHelper db = new DbHelper(_cont);
         JSONObject point = db.getPoint(_pointId);
         String lat = new String();
@@ -39,17 +39,17 @@ public class HTTPrequestHelper{
         lat =  point.getString("lat");
         lon =  point.getString("lon");
 
-        Log.i("HTTPrequestHelper",lat + " " + lon);
+        //Log.i("HTTPrequestHelper",lat + " " + lon);
         } catch (JSONException e) { e.printStackTrace(); }
 
-        Log.i("HTTPrequestHelper request","https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon +"&units=metric&exclude=daily&appid=491a54922af0f56f87b30ee988483263");
+        //Log.i("HTTPrequestHelper request","https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon +"&units=metric&exclude=daily&appid=491a54922af0f56f87b30ee988483263");
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, //получение данных
                 "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon +
                         "&units=metric&exclude=daily&appid=491a54922af0f56f87b30ee988483263", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.i("HTTPrequestHelper","onResponse");
+                //Log.i("HTTPrequestHelper","onResponse");
                 try {
                     //Второй объект будет довольно близко ко времени к времени точки
                     JSONObject hourly = response.getJSONArray("hourly").getJSONObject(1);

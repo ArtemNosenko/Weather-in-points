@@ -41,13 +41,13 @@ private static final String TAG = "DbHelper";
                                         String js = c.getString(c.getColumnIndex("point"));
                                         JSONObject joPointToUpdate = new JSONObject(js);
 
-                                        Log.i(TAG, joPointToUpdate.getString("pointName") + " " + "updateDbOnReceive");
+                                        //Log.i(TAG, joPointToUpdate.getString("pointName") + " " + "updateDbOnReceive");
 
                                         HTTPrequestHelper httpHelper = new HTTPrequestHelper(context);
                                         httpHelper.updatePoint(id);
 
                                     } catch (JSONException e) {
-                                        Log.i(TAG, "exeption");
+                                        //Log.i(TAG, "exeption");
                                     }
                                 }
 
@@ -105,7 +105,7 @@ private static final String TAG = "DbHelper";
                         curDay = 6;
                     JSONObject joRepeat = new JSONObject();
 
-                    Log.i("DbHelper isPointRepeatToday",ar.toString() );
+                    //Log.i("DbHelper isPointRepeatToday",ar.toString() );
 
                     String repeatStr = ar.getString(curDay);
                     joRepeat = new  JSONObject(repeatStr);
@@ -122,12 +122,13 @@ private static final String TAG = "DbHelper";
                                 isRepeat = false;
                     }
 
-                } catch (JSONException e) {  Log.i("DbHelper isPointRepeatToday1","exeption "); }
+                } catch (JSONException e) {  //Log.i("DbHelper isPointRepeatToday1","exeption ");
+                }
                 c.moveToNext();
             }
         }
 
-        Log.i("DbHelper isPointRepeatToday4","" );
+        //Log.i("DbHelper isPointRepeatToday4","" );
          return isRepeat ;
     }
 
@@ -154,7 +155,8 @@ private static final String TAG = "DbHelper";
                                               obj = jo;
                                               closestTime = pDate.getTime();
                                            }
-                                       } catch (JSONException e) {Log.i("DbHelper","exeption");}
+                                       } catch (JSONException e) {Log.i("DbHelper","exeption");
+                                       }
                                        c.moveToNext();
                                    }
                                }
@@ -175,7 +177,8 @@ private static final String TAG = "DbHelper";
                String js = c.getString(c.getColumnIndex("point"));
                try {
                    obj = new JSONObject(js);
-               } catch (JSONException e) { Log.i("DbHelper","exeption"); }
+               } catch (JSONException e) { Log.i("DbHelper::getPoint","exeption");
+               }
                c.moveToNext();
            }
        }
@@ -191,7 +194,7 @@ private static final String TAG = "DbHelper";
 
        String[]  selectionArgs = new String[] { id };
 
-       Log.i("DbHelper", "updatePointInDb");
+       //Log.i("DbHelper", "updatePointInDb");
        int updCount = db.update("Points", cv, "id = ?", selectionArgs);
    }
 

@@ -60,15 +60,23 @@ QtAndroidService::QtAndroidService(QObject *parent) : QObject(parent)
 
 }
 
-
-
 void QtAndroidService::startService()
 {
-
-    QAndroidIntent serviceIntent(QtAndroid::androidActivity().object(),
-                                        "org/ArtemNosenko/WeatherInPoints/QtAndroidService");
+    QAndroidIntent serviceIntent(QtAndroid::androidActivity().object(),"org/ArtemNosenko/WeatherInPoints/QtAndroidService");
+    serviceIntent.putExtra("action", QByteArray("set"));
     QAndroidJniObject result = QtAndroid::androidActivity().callObjectMethod(
                 "startService",
                 "(Landroid/content/Intent;)Landroid/content/ComponentName;",
                 serviceIntent.handle().object());
+}
+
+void QtAndroidService::cancelNotification()
+{
+    QAndroidIntent serviceIntent(QtAndroid::androidActivity().object(),"org/ArtemNosenko/WeatherInPoints/QtAndroidService");
+    serviceIntent.putExtra("action", QByteArray("cancel"));
+    QAndroidJniObject result = QtAndroid::androidActivity().callObjectMethod(
+                "startService",
+                "(Landroid/content/Intent;)Landroid/content/ComponentName;",
+                serviceIntent.handle().object());
+
 }
