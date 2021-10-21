@@ -9,7 +9,7 @@ Item {
         var db = LocalStorage.openDatabaseSync("MapWeatherPoints", "1.0", "Weather data at a specific points and time", 1000000);
         db.transaction(
                     function(tx) {
-                       // tx.executeSql(' DROP TABLE Points');
+                       // tx.executeSql('DROP TABLE Points');
                         tx.executeSql('CREATE TABLE IF NOT EXISTS Points(point TEXT, daysToRepeat TEXT,id TEXT)');
 
                         var rs = tx.executeSql('SELECT * FROM Points');

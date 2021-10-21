@@ -62,24 +62,11 @@ QtAndroidService::QtAndroidService(QObject *parent) : QObject(parent)
 
 
 
-void QtAndroidService::notify(const QString &title,const QString &text)
+void QtAndroidService::startService()
 {
-
-//    QAndroidJniObject javaNotification = QAndroidJniObject::fromString(text);
-//    QAndroidJniObject javaNotificationTitle = QAndroidJniObject::fromString(title);
-//    QAndroidJniObject::callStaticMethod<void>(
-//        "org/ArtemNosenko/WeatherInPoints/NotificationClient",
-//        "notify",
-//        "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
-//        QtAndroid::androidContext().object(),
-//        javaNotificationTitle.object<jstring>(),
-//        javaNotification.object<jstring>());
 
     QAndroidIntent serviceIntent(QtAndroid::androidActivity().object(),
                                         "org/ArtemNosenko/WeatherInPoints/QtAndroidService");
-    serviceIntent.putExtra("title", title.toUtf8());
-    serviceIntent.putExtra("text", text.toUtf8());
-    qDebug()<<"cppNotify"<<title<<text;
     QAndroidJniObject result = QtAndroid::androidActivity().callObjectMethod(
                 "startService",
                 "(Landroid/content/Intent;)Landroid/content/ComponentName;",

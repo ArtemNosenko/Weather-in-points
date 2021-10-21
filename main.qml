@@ -162,7 +162,7 @@ ApplicationWindow {
         text: "test"
         anchors.bottom: listView.bottom
         anchors.left: addButton.right
-        onClicked: qtAndroidService.notify("title", new Date().getSeconds())
+        onClicked: qtAndroidService.startService()
     }
     Button {
         id: delButton

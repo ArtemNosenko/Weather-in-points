@@ -15,8 +15,10 @@ import android.graphics.Color;
 import android.graphics.BitmapFactory;
 import android.app.NotificationChannel;
 import java.util.Date;
+import java.util.Calendar;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.json.JSONException;
 
 
@@ -38,23 +40,25 @@ import com.android.volley.toolbox.Volley;
 public class MyStartServiceReceiver extends BroadcastReceiver {
 
     private static final String TAG = "MyStartServiceReceiver";
-    private static native void updateWeatherDatabaseJava(int x);
     @Override
     public void onReceive(Context context, Intent intent) {
 
+       Log.i("MyStartServiceReceiver", "onReceive ");
 
-       String title = new String(intent.getStringExtra("title"));
-       Log.i("MyStartServiceReceiver", "onReceive " + title);
-       String text = new String(intent.getStringExtra("text"));
-       Log.i("MyStartServiceReceiver", "onReceive " + text);
-
-      // notifyy(context,title,text);
-
-
-
+        String action = intent.getAction();
+        if(action != null) {
+            Log.i(TAG + " Action",action);
+            //Если произошла перезагрузка, то нужно запустить сервер
+            if(!action.equals("notifyIfNeeded")) {
+                Intent startServiceIntent = new Intent(context, QtAndroidService.class);
+                context.startService(startServiceIntent);
+            }
+        }
 
       DBHelper dbHelper = new DBHelper(context);
       JSONObject jo = dbHelper.getFirstPointInTime();
+
+  //    Log.i(TAG,jo.toString());
 
       Date pDate = new Date();
       try {
@@ -62,9 +66,7 @@ public class MyStartServiceReceiver extends BroadcastReceiver {
         pDate.setMinutes(Integer.parseInt(jo.getString("minute")));
        }catch (JSONException e) {Log.i("MyStartServiceReceiver","JSONException");}
 
-   Log.i(TAG, String.valueOf(pDate.getTime()/1000 - System.currentTimeMillis()/1000));
-
-     // Time t = new Time(Integer.parseInt(jo.getString("hour")),Integer.parseInt(jo.getString("minute"))).getTime();
+//   Log.i(TAG, String.valueOf(pDate.getTime()/1000 - System.currentTimeMillis()/1000));
 
       if (pDate.getTime() < System.currentTimeMillis() + 1.5*3600*1000 &&  pDate.getTime()  >= System.currentTimeMillis() + 3600*1000) {//updateDb
 
@@ -72,15 +74,21 @@ public class MyStartServiceReceiver extends BroadcastReceiver {
        Cursor c = db.query("Points",null,null, null, null, null, null);
                        if (c.moveToFirst()) {
                            while ( !c.isAfterLast() ) {
-                               String js = c.getString(c.getColumnIndex("point"));
                                String id = c.getString(c.getColumnIndex("id"));
-                               try {
-                                   JSONObject joPointToUpdate = new JSONObject(js);
-                                   Log.i(TAG,joPointToUpdate.getString("pointName") + " " + "updateDbOnReceive");
-                                   HTTPrequestHelper httpHelper = new HTTPrequestHelper(context);
-                                   httpHelper.updatePoint(id);
+                               if (dbHelper.isPointRepeatToday(id)) {
+                                   try {
+                                       String js = c.getString(c.getColumnIndex("point"));
+                                       JSONObject joPointToUpdate = new JSONObject(js);
 
-                               } catch (JSONException e) {Log.i(TAG,"exeption");}
+                                       Log.i(TAG, joPointToUpdate.getString("pointName") + " " + "updateDbOnReceive");
+
+                                       HTTPrequestHelper httpHelper = new HTTPrequestHelper(context);
+                                       httpHelper.updatePoint(id);
+
+                                   } catch (JSONException e) {
+                                       Log.i(TAG, "exeption");
+                                   }
+                               }
 
                                c.moveToNext();
                            }
@@ -96,17 +104,19 @@ public class MyStartServiceReceiver extends BroadcastReceiver {
         int notifyId = 1;
                        if (c.moveToFirst()) {
                            while ( !c.isAfterLast() ) {
-                               String js = c.getString(c.getColumnIndex("point"));
+                               String id = c.getString(c.getColumnIndex("id"));
+                               if (dbHelper.isPointRepeatToday(id)) {
                                try {
-
+                                   String js = c.getString(c.getColumnIndex("point"));
                                    JSONObject joPoint = new JSONObject(js);
+
                                    Log.i(TAG,joPoint.getString("pointName") + " " + "notifyOnReceive");
 
                                    notifyy(context,joPoint.getString("pointName") , "Temp: " + joPoint.getString("temp"),notifyId);
                                    notifyId++;
                                } catch (JSONException e) {
-
-                               Log.i(TAG,"exeption");
+                               Log.i(TAG,"exeption1");
+                               }
                                }
                                c.moveToNext();
                            }
@@ -142,6 +152,62 @@ class DBHelper extends SQLiteOpenHelper {
    @Override
    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
+   public boolean isPointRepeatToday(String pointID){
+
+       SQLiteDatabase db =  getReadableDatabase();
+       String[] column = new String[]{"point", "daysToRepeat"};
+       String selection = "id == ?";
+       String[]  selectionArgs = new String[] { pointID };
+
+
+       Cursor c = db.query("Points", column, selection , selectionArgs, null, null, null);
+
+       JSONArray ar = new JSONArray();
+       boolean isRepeat = false;
+
+       if (c.moveToFirst()) {
+           while ( !c.isAfterLast() ) {
+               String js = c.getString(c.getColumnIndex("daysToRepeat"));
+               try {
+                   ar = new JSONArray(js);
+
+                   Calendar rightNow = Calendar.getInstance();
+
+                   int curDay = rightNow.get(Calendar.DAY_OF_WEEK);
+                   //Week day order
+                   if (curDay != 1)
+                       curDay = curDay - 2;
+                   else
+                       curDay = 6;
+                   JSONObject joRepeat = new JSONObject();
+
+                   Log.i("DBHelper isPointRepeatToday",ar.toString() );
+
+                   String repeatStr = ar.getString(curDay);
+                   joRepeat = new  JSONObject(repeatStr);
+                   isRepeat = joRepeat.getBoolean("repeat");
+
+                   if (isRepeat == true)
+                   {
+
+                        js = c.getString(c.getColumnIndex("point"));
+
+                        JSONObject joPoint = new JSONObject(js);
+                        boolean isActive = joPoint.getBoolean("activated");
+                           if (!isActive)
+                               isRepeat = false;
+                   }
+
+               } catch (JSONException e) {  Log.i("DBHelper isPointRepeatToday1","exeption "); }
+               c.moveToNext();
+           }
+       }
+
+       Log.i("DBHelper isPointRepeatToday4","" );
+        return isRepeat ;
+   }
+
+
    public JSONObject getFirstPointInTime(){
               SQLiteDatabase db =  getReadableDatabase();
               Cursor c = db.query("Points", null,null, null, null, null, null);
@@ -152,13 +218,14 @@ class DBHelper extends SQLiteOpenHelper {
                                       String js = c.getString(c.getColumnIndex("point"));
                                       try {
                                           JSONObject jo = new JSONObject(js);
-
                                           Date pDate = new Date();
                                           pDate.setHours(Integer.parseInt(jo.getString("hour")));
                                           pDate.setMinutes(Integer.parseInt(jo.getString("minute")));
 
-                                         // Time t = new Time(Integer.parseInt(jo.getString("hour")),Integer.parseInt(jo.getString("minute"))).getTime();
-                                          if (closestTime == -1 || pDate.getTime() < closestTime)
+                                          String id = c.getString(c.getColumnIndex("id"));
+                                          boolean pointIsActive = isPointRepeatToday(id);
+
+                                          if ((closestTime == -1 || pDate.getTime() < closestTime) && pointIsActive)
                                           {
                                              obj = jo;
                                              closestTime = pDate.getTime();

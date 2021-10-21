@@ -61,7 +61,7 @@ import android.os.CountDownTimer;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 
-
+import java.util.Calendar;
 
 public class QtAndroidService extends Service
 {
@@ -83,19 +83,19 @@ public class QtAndroidService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int ret = super.onStartCommand(intent, flags, startId);
+        Log.i(TAG, "onStartCommand: ");
 
         Intent intentAlarm = new Intent(this,MyStartServiceReceiver.class);
-        String title = new String(intent.getByteArrayExtra("title"));
-        String text = new String(intent.getByteArrayExtra("text"));
-        Log.i(TAG, "onStartCommand: "  + text);
-        intentAlarm.putExtra("title",title);
-        intentAlarm.putExtra("text",text);
-
-
-        PendingIntent pi =  PendingIntent.getBroadcast(this,1,intentAlarm,PendingIntent.FLAG_UPDATE_CURRENT);
-        long curTime = System.currentTimeMillis();
+        intentAlarm.setAction("notifyIfNeeded");
+        PendingIntent pi =  PendingIntent.getBroadcast(this,0,intentAlarm,PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarm.setExact(AlarmManager.RTC_WAKEUP,curTime + 4000,pi);
+
+        Calendar updateTime = Calendar.getInstance();
+
+        //Что б не стартовал несколько раз
+        //alarm.cancel(pi);
+        alarm.setExact(AlarmManager.RTC_WAKEUP, updateTime.getTimeInMillis(), pi);
+
         return ret;
     }
     @Override
@@ -119,44 +119,3 @@ public class QtAndroidService extends Service
 //            }
 //        }.start();
 
-//import android.app.Notification;
-//import android.app.NotificationManager;
-//import android.app.PendingIntent;
-//import android.graphics.Color;
-//import android.graphics.BitmapFactory;
-//import android.app.NotificationChannel;
-
-//public class NotificationClient
-//{
-//    private static NotificationManager m_notificationManager;
-//    private static Notification.Builder m_builder;
-
-//    public NotificationClient() {}
-
-//    public static void notify(Context context,String title, String message) {
-//        try {
-//            m_notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//                int importance = NotificationManager.IMPORTANCE_DEFAULT;
-//                NotificationChannel notificationChannel = new NotificationChannel("Qt", "Qt Notifier", importance);
-//                m_notificationManager.createNotificationChannel(notificationChannel);
-//                m_builder = new Notification.Builder(context, notificationChannel.getId());
-//            } else {
-//                m_builder = new Notification.Builder(context);
-//            }
-
-//            m_builder.setSmallIcon(R.drawable.icon)
-//                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.icon))
-//                    .setContentTitle(title)
-//                    .setContentText(message)
-//                    .setDefaults(Notification.DEFAULT_SOUND)
-//                    .setColor(Color.GREEN)
-//                    .setAutoCancel(true);
-
-//            m_notificationManager.notify(0, m_builder.build());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//}
