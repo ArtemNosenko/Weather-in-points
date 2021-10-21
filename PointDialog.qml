@@ -59,6 +59,7 @@ Dialog {
                           "windGust":-1,
                           "rainVolume":-1,
                           "snowVolume":-1,
+                          "id": new Date().getMilliseconds(),
                           "daysToRepeat" : [
                               {"dayOfWeek": 1, "repeat" : false},
                               {"dayOfWeek": 2, "repeat" : false},

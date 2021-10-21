@@ -9,8 +9,8 @@ Item {
         var db = LocalStorage.openDatabaseSync("MapWeatherPoints", "1.0", "Weather data at a specific points and time", 1000000);
         db.transaction(
                     function(tx) {
-                        // tx.executeSql(' DROP TABLE Points');
-                        tx.executeSql('CREATE TABLE IF NOT EXISTS Points(point TEXT, daysToRepeat TEXT)');
+                       // tx.executeSql(' DROP TABLE Points');
+                        tx.executeSql('CREATE TABLE IF NOT EXISTS Points(point TEXT, daysToRepeat TEXT,id TEXT)');
 
                         var rs = tx.executeSql('SELECT * FROM Points');
 
@@ -21,7 +21,7 @@ Item {
 
                             for (var j = 0; j < daysToRepeat.length; j++)
                                 daysToRepeat[j] =  JSON.parse(daysToRepeat[j])
-
+                            var id = rs.rows.item(i).id;
                             lModel.append({
                                               "lat":       objPoint["lat"],
                                               "lon":       objPoint["lon"],
@@ -47,6 +47,7 @@ Item {
                                               "rainVolume":objPoint["rainVolume"],
                                               "snowVolume":objPoint["snowVolume"],
                                               "windGust" : objPoint["windGust"],
+                                              "id": id,
                                               "daysToRepeat" : daysToRepeat
                                           }
                                           )
@@ -63,7 +64,7 @@ Item {
         var db = LocalStorage.openDatabaseSync("MapWeatherPoints", "1.0", "Weather data at a specific points and time", 1000000);
         db.transaction(
                     function(tx) {
-                        tx.executeSql('CREATE TABLE IF NOT EXISTS Points(point TEXT, daysToRepeat TEXT )');
+                        tx.executeSql('CREATE TABLE IF NOT EXISTS Points(point TEXT, daysToRepeat TEXT,id TEXT )');
                         tx.executeSql('DELETE FROM Points');
 
                         for (var i = 0; i < lModel.count; i++)
@@ -73,7 +74,7 @@ Item {
                                 array.push(JSON.stringify(lModel.get(i).daysToRepeat.get(j)))
                             }
 
-                            tx.executeSql('INSERT INTO Points VALUES(?,?)',[JSON.stringify(lModel.get(i)), JSON.stringify(array)]);
+                            tx.executeSql('INSERT INTO Points VALUES(?,?,?)',[JSON.stringify(lModel.get(i)), JSON.stringify(array),lModel.get(i).id]);
                         }
                     }
                     )

@@ -65,7 +65,6 @@ import android.app.PendingIntent;
 
 public class QtAndroidService extends Service
 {
-    private static native void sendToQt(String message);
     private static final String TAG = "QtAndroidService";
 
     @Override
