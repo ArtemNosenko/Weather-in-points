@@ -50,7 +50,6 @@
 
 package org.ArtemNosenko.WeatherInPoints;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -59,72 +58,32 @@ import android.graphics.Color;
 import android.graphics.BitmapFactory;
 import android.app.NotificationChannel;
 
-
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.app.Service;
+import android.os.IBinder;
+
+import android.os.CountDownTimer;
+
+import android.app.AlarmManager;
 
 public class NotificationClient
 {
-    private static NotificationManager m_notificationManager;
-    private static Notification.Builder m_builder;
 
     public NotificationClient() {}
 
-    private static native void callNativeOne(int x);
 
     public static void notify(Context context,String title, String message) {
 
-       callNativeOne(3);
-       // Log.i("NotifCl", testNative);
+        Intent intentAlarm = new Intent(context,MyStartServiceReceiver.class);
 
-//        DBHelper dbHelper = new DBHelper(context);
-//        SQLiteDatabase db =  dbHelper.getReadableDatabase();
-//        Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
-//        Log.i("NotifCl", db.getPath());
-//        if (c.moveToFirst()) {
-//            while ( !c.isAfterLast() ) {
-//                Log.i("NotifCl",c.getString(c.getColumnIndex("name")));
-//                c.moveToNext();
-//            }
-//        }
-//        Cursor cursor = db.query("Points",
-//                new String[] {"pointName"},
-//                null, null, null, null, null);
+        intentAlarm.putExtra("title",title);
+        intentAlarm.putExtra("text",message);
 
-//                        if (cursor.moveToFirst()) {
-//                            while ( !c.isAfterLast() ) {
-//                                Log.i("NotifCl", cursor.getString(0));
-//                                cursor.moveToNext();
-//                            }
-//                        }
+        intentAlarm.putExtra("action","notify");
 
-
-
-        try {
-            m_notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                NotificationChannel notificationChannel = new NotificationChannel("Qt", "Qt Notifier", importance);
-                m_notificationManager.createNotificationChannel(notificationChannel);
-                m_builder = new Notification.Builder(context, notificationChannel.getId());
-            } else {
-                m_builder = new Notification.Builder(context);
-            }
-
-            m_builder.setSmallIcon(R.drawable.icon)
-                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.icon))
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setDefaults(Notification.DEFAULT_SOUND)
-                    .setColor(Color.GREEN)
-                    .setAutoCancel(true);
-
-            m_notificationManager.notify(0, m_builder.build());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+        PendingIntent pi =  PendingIntent.getBroadcast(context,1,intentAlarm,PendingIntent.FLAG_UPDATE_CURRENT);
+        long curTime = System.currentTimeMillis();
+        AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarm.setExact(AlarmManager.RTC_WAKEUP,curTime + 4000,pi);
+}
 }

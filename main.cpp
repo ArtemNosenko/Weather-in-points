@@ -8,7 +8,8 @@
 #include <QAndroidJniEnvironment>
 #include <QAndroidJniObject>
 
-static QObject *rootQmlObject = nullptr;
+QObject *rootQmlObject = nullptr;
+QtAndroidService *qtAndroidService = nullptr;
 
 static void updateWeatherDatabaseCpp(JNIEnv *env, jobject thiz,jint x)
 {
@@ -16,7 +17,7 @@ static void updateWeatherDatabaseCpp(JNIEnv *env, jobject thiz,jint x)
     Q_UNUSED(thiz)
     Q_UNUSED(x)
     QMetaObject::invokeMethod(rootQmlObject, "updateWeatherDatabase");
-
+    qtAndroidService->notify("Title", QString::number(QTime::currentTime().second()));
 }
 
 void registerNativeMethods() {
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
     #if defined Q_OS_ANDROID
     rootQmlObject = engine.rootObjects().first();
     registerNativeMethods();
-    QtAndroidService *qtAndroidService = new QtAndroidService(&app);
+    qtAndroidService = new QtAndroidService(&app);
     engine.rootContext()->setContextProperty(QLatin1String("qtAndroidService"), qtAndroidService);
 
     #endif

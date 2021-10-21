@@ -86,15 +86,17 @@ public class QtAndroidService extends Service
         int ret = super.onStartCommand(intent, flags, startId);
 
         Intent intentAlarm = new Intent(this,MyStartServiceReceiver.class);
+        String title = new String(intent.getByteArrayExtra("title"));
+        String text = new String(intent.getByteArrayExtra("text"));
+        Log.i(TAG, "onStartCommand: "  + text);
+        intentAlarm.putExtra("title",title);
+        intentAlarm.putExtra("text",text);
 
-        PendingIntent pi =  PendingIntent.getBroadcast(this,1,intentAlarm,0);
 
+        PendingIntent pi =  PendingIntent.getBroadcast(this,1,intentAlarm,PendingIntent.FLAG_UPDATE_CURRENT);
         long curTime = System.currentTimeMillis();
-
         AlarmManager alarm = (AlarmManager)getSystemService(ALARM_SERVICE);
-
-        alarm.setExact(AlarmManager.RTC_WAKEUP,curTime + 5000,pi);
-
+        alarm.setExact(AlarmManager.RTC_WAKEUP,curTime + 4000,pi);
         return ret;
     }
     @Override

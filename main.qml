@@ -15,8 +15,8 @@ ApplicationWindow {
     property bool initialyLoadedData: false
 
     function updateWeatherDatabase(){
-        listModel.updateInfoAboutPoints()
-        saveLoadData.saveData()
+        //listModel.updateInfoAboutPoints()
+       // saveLoadData.saveData()
     }
 
     SaveLoadData {
@@ -40,6 +40,7 @@ ApplicationWindow {
         repeat: true
         onTriggered: listModel.updateInfoAboutPoints()
     }
+
 
     ListView {
         id: listView
@@ -155,6 +156,13 @@ ApplicationWindow {
             pointDialog.editedIndex = -1
             pointDialog.open()
         }
+    }
+    Button{
+        id:test
+        text: "test"
+        anchors.bottom: listView.bottom
+        anchors.left: addButton.right
+        onClicked: qtAndroidService.notify("title", new Date().getSeconds())
     }
     Button {
         id: delButton

@@ -62,14 +62,7 @@ class QtAndroidService : public QObject
 public:
     QtAndroidService(QObject *parent = nullptr);
 
-    static QtAndroidService *instance() { return m_instance; }
-    Q_INVOKABLE void sendToService(const QString &name);
-
-signals:
-    void messageFromService(const QString &message);
-
-private:
-    static QtAndroidService *m_instance;
+    Q_INVOKABLE void notify(const QString &title, const QString &text);
 };
 
 #endif // QTANDROIDSERVICE_H

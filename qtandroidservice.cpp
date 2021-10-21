@@ -54,58 +54,34 @@
 #include <QAndroidIntent>
 #include <QtDebug>
 
-QtAndroidService *QtAndroidService::m_instance = nullptr;
-
-static void receivedFromAndroidService(JNIEnv *env, jobject /*thiz*/, jstring value)
-{
-    emit QtAndroidService::instance()->messageFromService(env->GetStringUTFChars(value, nullptr));
-}
-
 
 QtAndroidService::QtAndroidService(QObject *parent) : QObject(parent)
 {
-    m_instance = this;
-{
-    JNINativeMethod methods[] {{"sendToQt", "(Ljava/lang/String;)V", reinterpret_cast<void *>(receivedFromAndroidService)}};
-    QAndroidJniObject javaClass("org/ArtemNosenko/WeatherInPoints/QtAndroidService");
-
-    QAndroidJniEnvironment env;
-    jclass objectClass = env->GetObjectClass(javaClass.object<jobject>());
-    env->RegisterNatives(objectClass,
-                         methods,
-                         sizeof(methods) / sizeof(methods[0]));
-    env->DeleteLocalRef(objectClass);
-    }
-
-//    JNINativeMethod methods[] {{"test", "(Ljava/lang/String;)V", reinterpret_cast<void *>(teest)}};
-//    QAndroidJniObject javaClass("org/ArtemNosenko/WeatherInPoints/MyStartServiceReceiver");
-
-//    QAndroidJniEnvironment env;
-//    jclass objectClass = env->GetObjectClass(javaClass.object<jobject>());
-//    env->RegisterNatives(objectClass,
-//                         methods,
-//                         sizeof(methods) / sizeof(methods[0]));
-//    env->DeleteLocalRef(objectClass);
-
 
 }
 
-void QtAndroidService::sendToService(const QString &name)
+
+
+void QtAndroidService::notify(const QString &title,const QString &text)
 {
+
+//    QAndroidJniObject javaNotification = QAndroidJniObject::fromString(text);
+//    QAndroidJniObject javaNotificationTitle = QAndroidJniObject::fromString(title);
+//    QAndroidJniObject::callStaticMethod<void>(
+//        "org/ArtemNosenko/WeatherInPoints/NotificationClient",
+//        "notify",
+//        "(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V",
+//        QtAndroid::androidContext().object(),
+//        javaNotificationTitle.object<jstring>(),
+//        javaNotification.object<jstring>());
+
     QAndroidIntent serviceIntent(QtAndroid::androidActivity().object(),
                                         "org/ArtemNosenko/WeatherInPoints/QtAndroidService");
-    serviceIntent.putExtra("name", name.toUtf8());
+    serviceIntent.putExtra("title", title.toUtf8());
+    serviceIntent.putExtra("text", text.toUtf8());
+    qDebug()<<"cppNotify"<<title<<text;
     QAndroidJniObject result = QtAndroid::androidActivity().callObjectMethod(
                 "startService",
                 "(Landroid/content/Intent;)Landroid/content/ComponentName;",
                 serviceIntent.handle().object());
-
-//    QAndroidIntent broad(QtAndroid::androidActivity().object(),
-//                                        "org/ArtemNosenko/WeatherInPoints/MyStartServiceReceiver");
-//    serviceIntent.putExtra("name", name.toUtf8());
-//    QAndroidJniObject result1 = QtAndroid::androidActivity().callObjectMethod(
-//                "startService",
-//                "(Landroid/content/Intent;)Landroid/content/ComponentName;",
-//                serviceIntent.handle().object());
-
 }

@@ -121,7 +121,7 @@ ItemDelegate {
                     checkable: true
                     Material.background: checked ? Material.accent : "transparent"
                     onToggled: { model.repeat = checked
-                        qtAndroidService.sendToService("test")
+                        //qtAndroidService.sendToService("test")
                     }
 
                 }
@@ -165,7 +165,7 @@ Timer{
         if ( daysToRepeat.get(curDay).repeat)
         {
             listModel.updateInfoAboutPoint(model.index)
-            qtAndroidService.sendToService(model.pointName)
+            //qtAndroidService.sendToService(model.pointName)
         }
 
         setNotificationTimer()
