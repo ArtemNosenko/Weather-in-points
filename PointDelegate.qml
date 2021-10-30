@@ -40,7 +40,6 @@ ItemDelegate {
                     id: dateLbl
                     readonly property date pointDate: new Date(model.year, model.month,model.date, model.hour,model.minute)
                     text: pointDate.toLocaleTimeString(window.locale,Locale.ShortFormat)
-                    onPointDateChanged:  notificationTimer.setNotificationTimer()
                 }
                 Label{
                     text: model.pointName
@@ -120,9 +119,7 @@ ItemDelegate {
                     checked: model.repeat
                     checkable: true
                     Material.background: checked ? Material.accent : "transparent"
-                    onToggled: { model.repeat = checked
-                        //qtAndroidService.sendToService("test")
-                    }
+                    onToggled: { model.repeat = checked }
 
                 }
             }
@@ -130,48 +127,6 @@ ItemDelegate {
 
 
     }
-
-Timer{
-    id: notificationTimer
-    function setNotificationTimer(){
-
-        const curDate = new Date()
-        var dateToNotification = dateLbl.pointDate
-        dateToNotification.setFullYear(curDate.getFullYear())
-        dateToNotification.setMonth(curDate.getMonth())
-        dateToNotification.setDate(curDate.getDate())
-        //hanf hour before actual pointTime
-        dateToNotification.setMinutes(dateToNotification.getMinutes() - 30)
-        if (curDate > dateToNotification)
-            dateToNotification.setDate(dateToNotification.getDate() + 1)
-
-        interval = dateToNotification - curDate
-        console.log(interval)
-        start()
-
-
-
-    }
-
-    onTriggered: {
-
-        var curDay = new Date().getDay()
-        //Week day order
-        if (curDay !== 0)
-            curDay = curDay - 1
-        else
-            curDay = 6
-
-        if ( daysToRepeat.get(curDay).repeat)
-        {
-            listModel.updateInfoAboutPoint(model.index)
-            //qtAndroidService.sendToService(model.pointName)
-        }
-
-        setNotificationTimer()
-    }
-}
-
 }
 
 
