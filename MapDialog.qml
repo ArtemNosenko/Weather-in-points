@@ -4,8 +4,10 @@ import QtQuick 2.0
 import QtQuick.Window 2.14
 import QtLocation 5.11
 Item {
-    id: pointDlg
-    readonly property point pointCoordinate: Qt.point(marker.coordinate.latitude, marker.coordinate.longitude)
+    property alias markerCoordinate: mapView.center
+
+   // property point pointCoordinate: Qt.point(marker.coordinate.latitude, marker.coordinate.longitude)
+    onMarkerCoordinateChanged: console.log(markerCoordinate)
     PositionSource {
         id: userPos
         updateInterval: 100000
@@ -27,8 +29,8 @@ Item {
                     value: "http://maps-redirect.qt.io/osm/5.6/"
                 }
         }
-
-        center: userPos.position.coordinate
+        Component.onCompleted: center = userPos.position.coordinate
+       // center: userPos.position.coordinate
         zoomLevel: 14
 
         MapQuickItem {

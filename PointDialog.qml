@@ -16,8 +16,9 @@ Dialog {
     onEditedIndexChanged: {
         if (editedIndex != -1 && mode === 1){
             var pointObj = lModel.get(editedIndex)
-            mapdialog.pointCoordinate.x =  pointObj.lat
-            mapdialog.pointCoordinate.y =  pointObj.lon
+
+            mapdialog.markerCoordinate.latitude =  pointObj.lat
+            mapdialog.markerCoordinate.longitude =  pointObj.lon
             pointNameField.text = pointObj.pointName
             hoursTumbler.currentIndex = pointObj.hour
             minutesTumbler.currentIndex = pointObj.minute
@@ -35,8 +36,8 @@ Dialog {
     function createCurrentPoint(){
         var today = new Date()
         lModel.append({
-                          "lat": mapdialog.pointCoordinate.x,
-                          "lon": mapdialog.pointCoordinate.y,
+                          "lat": mapdialog.markerCoordinate.latitude,
+                          "lon": mapdialog.markerCoordinate.longitude,
                           "year": today.getFullYear(),
                           "month": today.getMonth(),
                           "date": today.getDate(),
@@ -79,8 +80,8 @@ Dialog {
             createCurrentPoint()
         if (mode === 1)
         {
-            lModel.setProperty(editedIndex, "lat", mapdialog.pointCoordinate.x)
-            lModel.setProperty(editedIndex, "lon", mapdialog.pointCoordinate.y)
+            lModel.setProperty(editedIndex, "lat", mapdialog.markerCoordinate.latitude)
+            lModel.setProperty(editedIndex, "lon", mapdialog.markerCoordinate.longitude)
             lModel.setProperty(editedIndex, "hour", hoursTumbler.currentIndex)
             lModel.setProperty(editedIndex, "minute", minutesTumbler.currentIndex)
             lModel.setProperty(editedIndex, "pointName", pointNameField.text)

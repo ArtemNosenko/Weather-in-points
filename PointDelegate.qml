@@ -23,8 +23,7 @@ ItemDelegate {
         else
             ListView.view.currentIndex = -1
     }
-    onPressAndHold: {
-        control.checked = true }
+    onPressAndHold: {control.checked = true }
 
     onSelectionModeChanged: {
         if (selectionMode === false)
