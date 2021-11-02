@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     #if defined Q_OS_ANDROID
     QtAndroidService *qtAndroidService = new QtAndroidService(&app);
     engine.rootContext()->setContextProperty(QLatin1String("qtAndroidService"), qtAndroidService);
-    //qtAndroidService->startService();
+    qtAndroidService->startService();
     #endif
      return app.exec();
 }
